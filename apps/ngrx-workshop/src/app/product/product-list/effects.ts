@@ -5,6 +5,7 @@ import { catchError, exhaustMap, map, of, tap } from 'rxjs';
 import { ProductService } from '../product.service';
 import * as ProductListPageActions from './actions';
 import * as apiActions from '../actions';
+import * as cartActions from '../../cart/action';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({ providedIn: 'root' })
@@ -31,7 +32,7 @@ export class ProductEffects {
   readonly fetchProductError$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(apiActions.productFetchError),
+        ofType(apiActions.productFetchError, cartActions.addToCartFailure),
         tap(() => {
           this.snackBar.open('Something went wrong!', 'Error', {
             duration: 2500,

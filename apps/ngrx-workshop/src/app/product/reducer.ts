@@ -1,5 +1,4 @@
 import { BasicProduct, Product } from '@ngrx-nx-workshop/api-interfaces';
-import { data } from '@ngrx-nx-workshop/data';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as apiActions from '../product/actions';
 

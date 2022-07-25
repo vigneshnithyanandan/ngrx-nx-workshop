@@ -12,6 +12,7 @@ import { map, shareReplay } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 import * as ProductListPageActions from './actions';
 import { getProduct } from '../selector';
+import { GlobalState } from '../reducer';
 
 @Component({
   selector: 'ngrx-nx-workshop-home',
@@ -24,7 +25,7 @@ export class ProductListComponent implements OnInit {
   constructor(
     private readonly productService: ProductService,
     private readonly ratingService: RatingService,
-    private readonly store: Store<{ product: { products: BasicProduct[] } }>
+    private readonly store: Store<GlobalState>
   ) {}
 
   ngOnInit() {
