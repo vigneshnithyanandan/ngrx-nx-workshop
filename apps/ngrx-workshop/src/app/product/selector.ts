@@ -1,3 +1,8 @@
-import { GlobalState } from './reducer';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { GlobalState, ProductState } from './reducer';
 
-export const getProduct = (state: GlobalState) => state.product.products;
+const getProductState = createFeatureSelector<ProductState>('product');
+
+export const getProduct = createSelector(getProductState, (productState) => {
+  return productState.products;
+});
