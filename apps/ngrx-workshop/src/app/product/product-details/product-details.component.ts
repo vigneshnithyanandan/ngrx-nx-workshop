@@ -5,10 +5,11 @@ import { Rating } from '@ngrx-nx-workshop/api-interfaces';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { filter, map, shareReplay, switchMap } from 'rxjs/operators';
-import * as cartActions from '../actions';
+import * as productActions from '../actions';
 import { CartService } from '../../cart/cart.service';
 import { ProductService } from '../product.service';
 import { RatingService } from '../rating.service';
+import { getCurrentProduct } from '../selector';
 
 @Component({
   selector: 'ngrx-nx-workshop-product-details',
@@ -16,16 +17,7 @@ import { RatingService } from '../rating.service';
   styleUrls: ['./product-details.component.scss'],
 })
 export class ProductDetailsComponent {
-  private readonly productId$ = this.router.paramMap.pipe(
-    map((params: ParamMap) => params.get('productId')),
-    filter((id: string | null): id is string => !!id),
-    shareReplay({ bufferSize: 1, refCount: true })
-  );
-
-  product$ = this.productId$.pipe(
-    switchMap((id) => this.productService.getProduct(id))
-  );
-
+  product$ = this.store.select(getCurrentProduct);
   private customerRating$ = new BehaviorSubject<number | undefined>(undefined);
 
   constructor(
@@ -36,11 +28,12 @@ export class ProductDetailsComponent {
     private readonly location: Location,
     private readonly store: Store
   ) {
-    this.productId$
-      .pipe(switchMap((id) => this.ratingService.getRating(id)))
-      .subscribe((productRating) =>
-        this.customerRating$.next(productRating && productRating.rating)
-      );
+    this.store.dispatch(productActions.porductPageOpened());
+    // this.productId$
+    //   .pipe(switchMap((id) => this.ratingService.getRating(id)))
+    //   .subscribe((productRating) =>
+    //     this.customerRating$.next(productRating && productRating.rating)
+    //   );
   }
 
   setRating(productId: string, rating: Rating) {
@@ -60,7 +53,7 @@ export class ProductDetailsComponent {
   }
 
   addToCart(productId: string) {
-    this.store.dispatch(cartActions.addToCart({ productId }));
+    this.store.dispatch(productActions.addToCart({ productId }));
     // this.cartService.addProduct(productId);
   }
 

@@ -2,10 +2,6 @@ import { BasicProduct, Product } from '@ngrx-nx-workshop/api-interfaces';
 import { Action, createReducer, on } from '@ngrx/store';
 import * as apiActions from '../product/actions';
 
-export interface GlobalState {
-  product: ProductState;
-}
-
 export interface ProductState {
   products?: BasicProduct[];
 }
@@ -16,7 +12,7 @@ export const initialState: ProductState = {
 
 export const productReducer = createReducer(
   initialState,
-  on(apiActions.productFetched, (state, { products }) => {
+  on(apiActions.productsFetched, (state, { products }) => {
     return {
       ...state,
       products: [...products],
@@ -26,6 +22,20 @@ export const productReducer = createReducer(
     return {
       ...state,
       products: [],
+    };
+  }),
+  on(apiActions.productFetched, (state, { product }) => {
+    const newProducts = [...(state.products ?? [])]?.map((productFromState) => {
+      if (productFromState.id === product.id) {
+        const newProduct = { ...productFromState, ...product };
+        return newProduct;
+      }
+      return productFromState;
+    });
+    console.log(newProducts);
+    return {
+      ...state,
+      products: newProducts,
     };
   })
 );

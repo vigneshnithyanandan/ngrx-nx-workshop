@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import {
-  BasicProduct,
-  Product,
-  Rating,
-} from '@ngrx-nx-workshop/api-interfaces';
+import { BasicProduct, Rating } from '@ngrx-nx-workshop/api-interfaces';
 import { ProductService } from '../product.service';
 import { RatingService } from '../rating.service';
 import { map, shareReplay } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 import * as ProductListPageActions from './actions';
 import { getProduct } from '../selector';
-import { GlobalState } from '../reducer';
 
 @Component({
   selector: 'ngrx-nx-workshop-home',
@@ -25,7 +20,7 @@ export class ProductListComponent implements OnInit {
   constructor(
     private readonly productService: ProductService,
     private readonly ratingService: RatingService,
-    private readonly store: Store<GlobalState>
+    private readonly store: Store
   ) {}
 
   ngOnInit() {
