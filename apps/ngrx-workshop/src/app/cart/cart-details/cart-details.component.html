@@ -1,4 +1,4 @@
-<ng-container *ngIf="cartProducts$ | async as cartProducts; else loading">
+<ng-container *ngIf="(cartDetailsVm$ | async).products as cartProducts; else loading">
   <ng-container *ngIf="cartProducts.length; else noProducts">
     <mat-card *ngFor="let product of cartProducts">
       <mat-card-content>
@@ -29,7 +29,7 @@
       >
         Purchase
       </button>
-      <div class="total">Total: {{ (total$ | async) || 0 | currency }}</div>
+      <div class="total">Total: {{ (cartDetailsVm$ | async).total || 0 | currency }}</div>
     </footer>
   </ng-container>
 </ng-container>

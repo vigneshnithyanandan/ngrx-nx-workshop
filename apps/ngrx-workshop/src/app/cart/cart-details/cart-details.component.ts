@@ -7,46 +7,27 @@ import { CartService } from '../cart.service';
 import { ProductService } from '../../product/product.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { getCartItems } from '../selector';
+import { createSelector, Store } from '@ngrx/store';
+import {
+  getCartItems,
+  getCartItemsCount,
+  getCartProducts,
+  getCartTotal,
+} from '../selector';
 import { cartPageOpened, cartPagePurchaseCompleted } from './actions';
 
+const cartDetailsVm = createSelector(
+  getCartProducts,
+  getCartTotal,
+  (products, total) => ({ products, total })
+);
 @Component({
   selector: 'ngrx-nx-workshop-cart-details',
   templateUrl: './cart-details.component.html',
   styleUrls: ['./cart-details.component.scss'],
 })
 export class CartDetailsComponent {
-  cartProducts$: Observable<CartProduct[] | undefined> = combineLatest(
-    this.store.select(getCartItems),
-    this.productService.getProducts()
-  ).pipe(
-    map(([cartItems, products]) => {
-      if (!cartItems || !products) return undefined;
-      return Object.entries(cartItems)
-        .map(([productId, quantity]): CartProduct | undefined => {
-          const product = products.find((p) => p.id === productId);
-          if (!product) return undefined;
-          return {
-            ...product,
-            quantity,
-          };
-        })
-        .filter((cartProduct): cartProduct is CartProduct => !!cartProduct);
-    })
-  );
-
-  total$ = this.cartProducts$.pipe(
-    map(
-      (cartProducts) =>
-        cartProducts &&
-        cartProducts.reduce(
-          (acc, product) => acc + product.price * product.quantity,
-          0
-        )
-    )
-  );
-
+  cartDetailsVm$ = this.store.select(cartDetailsVm);
   constructor(
     private readonly cartService: CartService,
     private readonly productService: ProductService,

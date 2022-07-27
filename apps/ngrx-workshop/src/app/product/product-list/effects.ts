@@ -18,6 +18,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import * as productActions from '../actions';
 import { getRouterParam } from '../../router/selector';
 import { Store } from '@ngrx/store';
+import * as cartDetailActions from '../../cart/cart-details/actions';
 
 @Injectable({ providedIn: 'root' })
 export class ProductEffects {
@@ -31,7 +32,10 @@ export class ProductEffects {
 
   readonly fetchProducts$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ProductListPageActions.productsOpened),
+      ofType(
+        ProductListPageActions.productsOpened,
+        cartDetailActions.cartPageOpened
+      ),
       exhaustMap(() =>
         this.productService.getProducts().pipe(
           map((products) => apiActions.productsFetched({ products })),

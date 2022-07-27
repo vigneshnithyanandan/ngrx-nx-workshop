@@ -10,6 +10,7 @@ import { CartService } from '../../cart/cart.service';
 import { ProductService } from '../product.service';
 import { RatingService } from '../rating.service';
 import { getCurrentProduct } from '../selector';
+import { getRouterParam } from '../../router/selector';
 
 @Component({
   selector: 'ngrx-nx-workshop-product-details',
@@ -29,7 +30,16 @@ export class ProductDetailsComponent {
     private readonly store: Store
   ) {
     this.store.dispatch(productActions.porductPageOpened());
-    // this.productId$
+    this.store
+      .select(getRouterParam('productId'))
+      .pipe(
+        switchMap((id) => {
+          return this.ratingService.getRating(id ?? '');
+        })
+      )
+      .subscribe((productRating) =>
+        this.customerRating$.next(productRating && productRating.rating)
+      );
     //   .pipe(switchMap((id) => this.ratingService.getRating(id)))
     //   .subscribe((productRating) =>
     //     this.customerRating$.next(productRating && productRating.rating)
