@@ -1,11 +1,12 @@
+<ng-container *ngIf="vm$ |async as vm">
 <div
   class="products-container"
-  *ngIf="products$ | async as products; else loadingProducts"
+  *ngIf="vm.loadState === LOADING.LOADED else loadingProducts"
 >
   <a
     class="card-link"
     [routerLink]="['/details', product.id]"
-    *ngFor="let product of products"
+    *ngFor="let product of vm.products"
   >
     <mat-card>
       <mat-card-title>{{ product.title }}</mat-card-title>
@@ -18,6 +19,7 @@
     </mat-card>
   </a>
 </div>
+</ng-container>
 
 <ng-template #loadingProducts>
   <ngrx-nx-workshop-spinner></ngrx-nx-workshop-spinner>

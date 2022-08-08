@@ -5,7 +5,7 @@ import { createAction, props } from '@ngrx/store';
 
 export const productsFetched = createAction(
   '[Product List page] Product list fetched',
-  props<{ products: BasicProduct[] }>()
+  props<{ products: Product[] }>()
 );
 
 export const productFetchError = createAction(
